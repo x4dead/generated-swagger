@@ -1,0 +1,254 @@
+openapi: 3.0.3
+info:
+  description: This is a sample Task manager Server based on the OpenAPI 3.0 specification.
+  title: Swagger Task manager -   OpenAPI
+  version: 0.0.1
+servers:
+- url: https://localhost:8080/
+paths:
+  /task/add:
+    post:
+      operationId: createUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskForUI'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/TaskForUI'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TaskForUI'
+        description: Cnamereated task object
+        required: true
+      responses:
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+          description: successful operation
+      summary: Create task
+      tags:
+      - task
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+      - application/xml
+      x-tags:
+      - tag: task
+  /task:
+    get:
+      operationId: getTasks
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tasks'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Tasks'
+          description: Successful operation
+        default:
+          description: successful operation
+      summary: Get list of tasks
+      tags:
+      - task
+      x-accepts:
+      - application/json
+      - application/xml
+      x-tags:
+      - tag: task
+  /task/get:
+    get:
+      description: ""
+      operationId: getTaskById
+      parameters:
+      - explode: true
+        in: query
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+          description: successful operation
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exception'
+          description: Task with ID 1 not found
+      summary: Get task by id
+      tags:
+      - task
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: task
+  /task/update/{id}:
+    put:
+      operationId: updateTaskById
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+          description: successful operation
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exception'
+          description: Task with ID 1 not found
+      summary: Update task fields
+      tags:
+      - task
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: task
+  /task/delete/{id}:
+    delete:
+      operationId: deleteTaskById
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+          description: successful operation
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exception'
+          description: Task with ID 1 not found
+      summary: Delete task fields
+      tags:
+      - task
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: task
+components:
+  requestBodies:
+    Task:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Task'
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/Task'
+  schemas:
+    SuccessResponse:
+      example:
+        data: Task added successfully
+      properties:
+        data:
+          example: Task added successfully
+          type: string
+      type: object
+      xml:
+        name: category
+    Exception:
+      example:
+        error:
+          code: 0
+          message: message
+      properties:
+        error:
+          $ref: '#/components/schemas/Exception_error'
+      type: object
+      xml:
+        name: exception
+    Task:
+      example:
+        name: task 1
+        description: This is description
+        id: 1
+        status: 0
+      properties:
+        id:
+          example: 1
+          format: int64
+          type: integer
+        name:
+          example: task 1
+          type: string
+        description:
+          example: This is description
+          type: string
+        status:
+          description: Task Status
+          example: 0
+          type: integer
+      required:
+      - name
+      type: object
+      xml:
+        name: task
+    TaskForUI:
+      example:
+        name: task 1
+        description: This is description
+        status: 0
+      properties:
+        name:
+          example: task 1
+          type: string
+        description:
+          example: This is description
+          type: string
+        status:
+          description: Task Status
+          example: 0
+          type: integer
+      required:
+      - name
+      type: object
+      xml:
+        name: task_ui
+    Tasks:
+      description: List of task
+      items:
+        $ref: '#/components/schemas/TaskForUI'
+      type: array
+    Exception_error:
+      example:
+        code: 0
+        message: message
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+      type: object
